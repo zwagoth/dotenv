@@ -186,6 +186,22 @@ func Load(paths ...string) (err error) {
 	return
 }
 
+func LoadExists(paths ...string) (err error) {
+	if len(paths) == 0 {
+		paths = append(paths, ".env")
+	}
+	for _, path := range paths {
+		err = loadFile(path, false)
+		if err != nil && os.IsNotExist(err) {
+			err = nil
+			continue
+		} else if err != nil {
+			return
+		}
+	}
+	return
+}
+
 // Overload will load a variadic number of environment config files.
 // Overwrites currently set env vars.
 func Overload(paths ...string) (err error) {
